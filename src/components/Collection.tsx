@@ -6,7 +6,7 @@ import { useCollectionContext } from '../contexts/CollectionContext';
 import { Task } from '../interfaces/interfaces';
 
 import AddTaskButton from './AddTaskButton';
-import TaskForm from './TaskForm';
+
 import TasksList from './TasksList';
 
 const ButtonContainer = styled('div')(({ theme }) => ({
@@ -28,10 +28,12 @@ function Collection() {
     <>
       <Box>
         <Typography variant="h5">{name}</Typography>
-        <ButtonContainer>
-          <AddTaskButton onClick={openTaskForm} />
-        </ButtonContainer>
-        <TasksList />
+        {collection && (
+          <ButtonContainer>
+            <AddTaskButton onClick={openTaskForm} />
+          </ButtonContainer>
+        )}
+        <TasksList tasks={tasks} />
       </Box>
     </>
   );

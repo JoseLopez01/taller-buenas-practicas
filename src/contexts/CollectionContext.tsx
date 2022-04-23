@@ -6,6 +6,7 @@ import {
   useState,
 } from 'react';
 import { Collection } from '../interfaces/interfaces';
+
 import {
   addCollection,
   addTaskToCollection,
@@ -17,6 +18,7 @@ export interface CollectionContext {
   collection: Collection | null;
   isTaskFormOpen: boolean;
   collections: Collection[];
+  collectionId: string | null;
   openTaskForm: () => void;
   closeTaskForm: () => void;
   setCollectionId: (collectionId: string) => void;
@@ -44,7 +46,8 @@ export function CollectionContextProvider({
     const fetchCollections = async () => {
       try {
         const collections = await getCollections();
-        setCollections(collections!);
+        setCollections(collections);
+        setCollectionId(collections[0].id!);
       } catch (error) {
         console.error(error);
       }
@@ -77,7 +80,7 @@ export function CollectionContextProvider({
   const addCollectionToDb = async (collection: string) => {
     try {
       const newCollection = await addCollection(collection);
-      setCollections([...collections, newCollection!]);
+      setCollections([...collections, newCollection]);
     } catch (error) {
       console.log(error);
     }
@@ -85,7 +88,14 @@ export function CollectionContextProvider({
 
   const addTask = async (task: FormData) => {
     try {
-      addTaskToCollection(collectionId, task);
+      const newTask = await addTaskToCollection(collectionId, task);
+      if (collection) {
+        const updatedCollection: Collection = {
+          ...collection,
+          tasks: [newTask, ...collection.tasks],
+        };
+        setCollection(updatedCollection);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -97,6 +107,7 @@ export function CollectionContextProvider({
         collection,
         isTaskFormOpen,
         collections,
+        collectionId,
         openTaskForm: openTaskFormHandler,
         closeTaskForm: closeTaskFormHandler,
         setCollectionId: setCollectionIdHandler,

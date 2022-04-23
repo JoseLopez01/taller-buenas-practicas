@@ -7,12 +7,13 @@ import ListItemText from '@mui/material/ListItemText';
 export interface MenuItemProps {
   children: ReactNode;
   onClick: () => void;
+  isSelected: boolean;
 }
 
-function MenuItem({ children, onClick }: MenuItemProps) {
+function MenuItem({ children, onClick, isSelected }: MenuItemProps) {
   return (
     <ListItem disablePadding>
-      <ListItemButton onClick={onClick}>
+      <ListItemButton onClick={onClick} selected={isSelected}>
         <ListItemText
           primaryTypographyProps={{
             color: 'text.secondary',
