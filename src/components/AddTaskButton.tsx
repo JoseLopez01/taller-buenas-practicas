@@ -14,7 +14,11 @@ const Container = styled(Button)(({ theme }) => ({
   },
 }));
 
-function AddTaskButton() {
+export interface AddTaskButtonProps {
+  onClick: () => void;
+}
+
+function AddTaskButton({ onClick }: AddTaskButtonProps) {
   return (
     <Container
       variant="outlined"
@@ -22,6 +26,7 @@ function AddTaskButton() {
       color="primary"
       fullWidth
       startIcon={<Add />}
+      onClick={onClick}
     >
       Add a task
     </Container>

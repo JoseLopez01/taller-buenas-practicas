@@ -25,13 +25,18 @@ const Input = styled(TextField)(({ theme }) => ({
   },
 }));
 
-function TaskForm() {
+export interface TaskFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+function TaskForm({ isOpen, onClose }: TaskFormProps) {
   return (
-    <Drawer anchor="right">
+    <Drawer anchor="right" open={isOpen}>
       <Container>
         <Stack direction="row" justifyContent="space-between">
           <Typography variant="h5">Task Form</Typography>
-          <IconButton>
+          <IconButton onClick={onClose}>
             <Close />
           </IconButton>
         </Stack>
