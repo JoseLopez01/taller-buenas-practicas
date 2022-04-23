@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
-import { useCollectionContext } from '../context/CollectionContext';
+import { useCollectionContext } from '../contexts/CollectionContext';
 
 import AddTaskButton from './AddTaskButton';
 import TaskForm from './TaskForm';

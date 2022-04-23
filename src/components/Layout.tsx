@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 
-import { useCollectionContext } from '../context/CollectionContext';
+import { useCollectionContext } from '../contexts/CollectionContext';
 
 import AsideBar from './AsideBar';
 import Collection from './Collection';
