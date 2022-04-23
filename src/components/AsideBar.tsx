@@ -34,7 +34,7 @@ function AsideBar() {
       }}
     >
       <Content>
-        <Typography variant="h6">Collections</Typography>
+        <Typography variant="body1">Collections</Typography>
         <List>
           <MenuItem>Inbox</MenuItem>
         </List>

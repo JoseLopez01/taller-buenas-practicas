@@ -1,12 +1,15 @@
 import { Box, Toolbar, Typography } from '@mui/material';
 import AsideBar from './AsideBar';
+import Collection from './Collection';
 import Main from './Main';
 
 function Layout() {
   return (
     <Box sx={{ display: 'flex' }}>
       <AsideBar />
-      <Main>Hola</Main>
+      <Main>
+        <Collection />
+      </Main>
     </Box>
   );
 }
