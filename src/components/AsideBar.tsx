@@ -9,6 +9,11 @@ import { styled } from '@mui/material/styles';
 import MenuItem from './MenuItem';
 
 const Container = styled(Drawer)(({ theme }) => ({
+  width: theme.spacing(25),
+  flexShrink: 0,
+  '& .MuiDrawer-paper': {
+    width: theme.spacing(26),
+  },
   '& .MuiPaper-root': {
     backgroundColor: theme.palette.divider,
   },
