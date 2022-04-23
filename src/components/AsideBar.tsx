@@ -26,7 +26,12 @@ const Content = styled(Box)(({ theme }) => ({
 }));
 
 function AsideBar() {
-  const { collections, setCollectionId, collectionId } = useCollectionContext();
+  const {
+    collections,
+    setCollectionId,
+    collectionId,
+    handleOnDeleteCollection,
+  } = useCollectionContext();
 
   const handleOnClick = (id: string) => {
     setCollectionId(id);
@@ -50,6 +55,7 @@ function AsideBar() {
               key={id}
               onClick={() => handleOnClick(id!)}
               isSelected={id === collectionId}
+              onDelete={() => handleOnDeleteCollection(id!)}
             >
               {name}
             </MenuItem>

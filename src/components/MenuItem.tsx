@@ -3,16 +3,21 @@ import { ReactNode } from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import DeleteButton from './DeleteButton';
 
 export interface MenuItemProps {
   children: ReactNode;
-  onClick: () => void;
   isSelected: boolean;
+  onClick: () => void;
+  onDelete?: () => void;
 }
 
-function MenuItem({ children, onClick, isSelected }: MenuItemProps) {
+function MenuItem({ children, onClick, isSelected, onDelete }: MenuItemProps) {
   return (
-    <ListItem disablePadding>
+    <ListItem
+      disablePadding
+      secondaryAction={<DeleteButton onClick={onDelete} />}
+    >
       <ListItemButton onClick={onClick} selected={isSelected}>
         <ListItemText
           primaryTypographyProps={{

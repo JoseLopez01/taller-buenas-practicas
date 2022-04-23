@@ -5,6 +5,7 @@ import {
   updateDoc,
   doc,
   arrayUnion,
+  deleteDoc,
 } from 'firebase/firestore';
 
 import { nanoid } from 'nanoid';
@@ -61,4 +62,6 @@ export async function addTaskToCollection(
   return newTask;
 }
 
-export async function updateTask() {}
+export async function deleteCollection(collectionId: string) {
+  await deleteDoc(doc(collectionsDocs, collectionId));
+}

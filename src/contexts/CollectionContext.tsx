@@ -10,6 +10,7 @@ import { Collection } from '../interfaces/interfaces';
 import {
   addCollection,
   addTaskToCollection,
+  deleteCollection,
   FormData,
   getCollections,
 } from '../utils/db';
@@ -24,6 +25,7 @@ export interface CollectionContext {
   setCollectionId: (collectionId: string) => void;
   addCollection: (collection: string) => void;
   addTaskToCollection: (task: FormData) => Promise<void>;
+  handleOnDeleteCollection: (collectionId: string) => Promise<void>;
 }
 
 export interface CollectionContextProps {
@@ -56,6 +58,7 @@ export function CollectionContextProvider({
     fetchCollections();
   }, []);
 
+  // ! TODO this can be optimized and only use the collection
   useEffect(() => {
     const selectedCollection = collections.find(
       (collection) => collection.id === collectionId
@@ -65,6 +68,7 @@ export function CollectionContextProvider({
     }
   }, [collectionId]);
 
+  // ! TODO this two functions can be used only in the components where are used
   const openTaskFormHandler = () => {
     setIsTaskFormOpen(true);
   };
@@ -73,6 +77,7 @@ export function CollectionContextProvider({
     setIsTaskFormOpen(false);
   };
 
+  // ! TODO this function can be used only in the components where is used
   const setCollectionIdHandler = (id: string) => {
     setCollectionId(id);
   };
@@ -101,6 +106,18 @@ export function CollectionContextProvider({
     }
   };
 
+  const handleOnDeleteCollection = async (id: string) => {
+    try {
+      await deleteCollection(id);
+      const updatedCollections = collections.filter(
+        (collection) => collection.id !== id
+      );
+      setCollections(updatedCollections);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <collectionContext.Provider
       value={{
@@ -108,6 +125,7 @@ export function CollectionContextProvider({
         isTaskFormOpen,
         collections,
         collectionId,
+        handleOnDeleteCollection,
         openTaskForm: openTaskFormHandler,
         closeTaskForm: closeTaskFormHandler,
         setCollectionId: setCollectionIdHandler,
