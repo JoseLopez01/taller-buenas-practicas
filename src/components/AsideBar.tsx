@@ -26,7 +26,11 @@ const Content = styled(Box)(({ theme }) => ({
 }));
 
 function AsideBar() {
-  const { collections } = useCollectionContext();
+  const { collections, setCollectionId } = useCollectionContext();
+
+  const handleOnClick = (id: string) => {
+    setCollectionId(id);
+  };
 
   return (
     <Container
@@ -42,7 +46,9 @@ function AsideBar() {
         </Typography>
         <List>
           {collections.map(({ name, id }) => (
-            <MenuItem key={id}>{name}</MenuItem>
+            <MenuItem key={id} onClick={() => handleOnClick(id!)}>
+              {name}
+            </MenuItem>
           ))}
           <AddCollection />
         </List>

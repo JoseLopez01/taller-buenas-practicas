@@ -9,13 +9,13 @@ import { Collection } from '../interfaces/interfaces';
 import { addCollection, getCollections } from '../utils/db';
 
 export interface CollectionContext {
-  collectionId: string;
+  collection: Collection | null;
   isTaskFormOpen: boolean;
+  collections: Collection[];
   openTaskForm: () => void;
   closeTaskForm: () => void;
   setCollectionId: (collectionId: string) => void;
   addCollection: (collection: string) => void;
-  collections: Collection[];
 }
 
 export interface CollectionContextProps {
@@ -30,6 +30,7 @@ export function CollectionContextProvider({
   children,
 }: CollectionContextProps) {
   const [collectionId, setCollectionId] = useState('');
+  const [collection, setCollection] = useState<Collection | null>(null);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [isTaskFormOpen, setIsTaskFormOpen] = useState(false);
 
@@ -45,6 +46,15 @@ export function CollectionContextProvider({
 
     fetchCollections();
   }, []);
+
+  useEffect(() => {
+    const selectedCollection = collections.find(
+      (collection) => collection.id === collectionId
+    );
+    if (selectedCollection) {
+      setCollection(selectedCollection);
+    }
+  }, [collectionId]);
 
   const openTaskFormHandler = () => {
     setIsTaskFormOpen(true);
@@ -70,7 +80,7 @@ export function CollectionContextProvider({
   return (
     <collectionContext.Provider
       value={{
-        collectionId,
+        collection,
         isTaskFormOpen,
         collections,
         openTaskForm: openTaskFormHandler,
