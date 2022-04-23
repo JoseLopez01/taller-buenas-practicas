@@ -1,8 +1,12 @@
+import { CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import { theme } from './styles/theme';
+
 function App() {
   return (
-    <div className="App">
-      <p>Hello Vite + React!</p>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+    </ThemeProvider>
   );
 }
 
