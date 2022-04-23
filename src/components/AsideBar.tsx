@@ -1,9 +1,13 @@
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
+
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+
 import MenuItem from './MenuItem';
+import AddCollection from './AddCollection';
+import { useCollectionContext } from '../contexts/CollectionContext';
 
 const Container = styled(Drawer)(({ theme }) => ({
   width: theme.spacing(25),
@@ -17,11 +21,13 @@ const Container = styled(Drawer)(({ theme }) => ({
 }));
 
 const Content = styled(Box)(({ theme }) => ({
-  width: theme.spacing(25),
-  padding: theme.spacing(2, 1),
+  width: '100%',
+  padding: theme.spacing(2, 0),
 }));
 
 function AsideBar() {
+  const { collections } = useCollectionContext();
+
   return (
     <Container
       open
@@ -31,9 +37,14 @@ function AsideBar() {
       }}
     >
       <Content>
-        <Typography variant="body1">Collections</Typography>
+        <Typography variant="body1" sx={{ paddingLeft: 1 }}>
+          Collections
+        </Typography>
         <List>
-          <MenuItem>Inbox</MenuItem>
+          {collections.map(({ name, id }) => (
+            <MenuItem key={id}>{name}</MenuItem>
+          ))}
+          <AddCollection />
         </List>
       </Content>
     </Container>
