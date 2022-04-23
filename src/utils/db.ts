@@ -1,7 +1,19 @@
-import { collection, addDoc, getDocs, getDoc } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  doc,
+  arrayUnion,
+} from 'firebase/firestore';
 
 import { firestore } from '../firebase/firebase';
 import { Collection, Task } from '../interfaces/interfaces';
+
+export type FormData = Pick<Task, 'description' | 'name'> & {
+  startDate: string;
+  endDate: string;
+};
 
 const collectionsDocs = collection(firestore, 'collections');
 
@@ -40,4 +52,14 @@ export async function getCollections(): Promise<Collection[] | null> {
     console.log(error);
     return null;
   }
+}
+
+export async function addTaskToCollection(
+  collectionId: string,
+  task: FormData
+) {
+  console.log({ collectionId, task });
+  await updateDoc(doc(collectionsDocs, collectionId), {
+    tasks: arrayUnion(task),
+  });
 }

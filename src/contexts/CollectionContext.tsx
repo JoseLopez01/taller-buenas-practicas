@@ -6,7 +6,12 @@ import {
   useState,
 } from 'react';
 import { Collection } from '../interfaces/interfaces';
-import { addCollection, getCollections } from '../utils/db';
+import {
+  addCollection,
+  addTaskToCollection,
+  FormData,
+  getCollections,
+} from '../utils/db';
 
 export interface CollectionContext {
   collection: Collection | null;
@@ -16,6 +21,7 @@ export interface CollectionContext {
   closeTaskForm: () => void;
   setCollectionId: (collectionId: string) => void;
   addCollection: (collection: string) => void;
+  addTaskToCollection: (task: FormData) => Promise<void>;
 }
 
 export interface CollectionContextProps {
@@ -77,6 +83,14 @@ export function CollectionContextProvider({
     }
   };
 
+  const addTask = async (task: FormData) => {
+    try {
+      addTaskToCollection(collectionId, task);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <collectionContext.Provider
       value={{
@@ -87,6 +101,7 @@ export function CollectionContextProvider({
         closeTaskForm: closeTaskFormHandler,
         setCollectionId: setCollectionIdHandler,
         addCollection: addCollectionToDb,
+        addTaskToCollection: addTask,
       }}
     >
       {children}
