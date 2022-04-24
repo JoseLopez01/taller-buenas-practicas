@@ -13,6 +13,7 @@ import {
   deleteCollection,
   FormData,
   getCollections,
+  updateCollectionTasks,
 } from '../utils/db';
 
 export interface CollectionContext {
@@ -26,6 +27,7 @@ export interface CollectionContext {
   addCollection: (collection: string) => void;
   addTaskToCollection: (task: FormData) => Promise<void>;
   handleOnDeleteCollection: (collectionId: string) => Promise<void>;
+  handleOnDeleteTask: (collectionId: string, taskId: string) => Promise<void>;
 }
 
 export interface CollectionContextProps {
@@ -118,6 +120,21 @@ export function CollectionContextProvider({
     }
   };
 
+  const handleOnDeleteTask = async (taskId: string) => {
+    try {
+      if (collection) {
+        const updatedCollection = {
+          ...collection,
+          tasks: collection.tasks.filter((task) => task.id !== taskId),
+        };
+        await updateCollectionTasks(collectionId, updatedCollection.tasks);
+        setCollection(updatedCollection);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <collectionContext.Provider
       value={{
@@ -126,6 +143,7 @@ export function CollectionContextProvider({
         collections,
         collectionId,
         handleOnDeleteCollection,
+        handleOnDeleteTask,
         openTaskForm: openTaskFormHandler,
         closeTaskForm: closeTaskFormHandler,
         setCollectionId: setCollectionIdHandler,

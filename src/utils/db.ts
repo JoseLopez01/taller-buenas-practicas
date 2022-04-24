@@ -65,3 +65,12 @@ export async function addTaskToCollection(
 export async function deleteCollection(collectionId: string) {
   await deleteDoc(doc(collectionsDocs, collectionId));
 }
+
+export async function updateCollectionTasks(
+  collectionId: string,
+  tasks: Task[]
+) {
+  await updateDoc(doc(collectionsDocs, collectionId), {
+    tasks,
+  });
+}

@@ -11,10 +11,11 @@ const Container = styled(Box)(({ theme }) => ({
 }));
 
 export interface TasksListProps {
+  id: string;
   tasks: Task[];
 }
 
-function TasksList({ tasks }: TasksListProps) {
+function TasksList({ tasks, id }: TasksListProps) {
   return (
     <Container>
       {tasks.length > 0 ? (

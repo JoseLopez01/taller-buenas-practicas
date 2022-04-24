@@ -8,6 +8,7 @@ import { styled } from '@mui/material/styles';
 
 import { Task } from '../interfaces/interfaces';
 import { useEffect, useState } from 'react';
+import DeleteButton from './DeleteButton';
 
 const Container = styled(ListItem)(({ theme }) => ({
   margin: theme.spacing(1, 0, 0, 0),
@@ -52,7 +53,7 @@ function TaskItem({ ...task }: TaskItemProps) {
   };
 
   return (
-    <Container>
+    <Container secondaryAction={<DeleteButton />}>
       <ListItemIcon>
         <CheckBox checked={completed} onChange={handleOnChange} />
       </ListItemIcon>

@@ -29,11 +29,13 @@ function Collection() {
       <Box>
         <Typography variant="h5">{name}</Typography>
         {collection && (
-          <ButtonContainer>
-            <AddTaskButton onClick={openTaskForm} />
-          </ButtonContainer>
+          <>
+            <ButtonContainer>
+              <AddTaskButton onClick={openTaskForm} />
+            </ButtonContainer>
+            <TasksList tasks={tasks} id={collection.id} />
+          </>
         )}
-        <TasksList tasks={tasks} />
       </Box>
     </>
   );
