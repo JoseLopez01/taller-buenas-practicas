@@ -27,35 +27,35 @@ const CheckBox = styled(MuiCheckbox)(({ theme }) => ({
   },
 }));
 
-export interface TaskItemProps extends Task {}
+export interface TaskItemProps extends Task {
+  onDeleteTask: (taskId: string) => void;
+  onComplete: (taskId: string) => void;
+}
 
-function TaskItem({ ...task }: TaskItemProps) {
+function TaskItem({ onDeleteTask, onComplete, ...task }: TaskItemProps) {
   const [checked, setChecked] = useState(false);
 
-  const { id, name, completed, description, endDate, startDate } = task;
+  const { id, name, completed, endDate, startDate } = task;
 
   useEffect(() => {
     setChecked(completed);
   }, [completed]);
-
-  useEffect(() => {
-    if (checked !== completed) {
-      console.log('updating task');
-    }
-  }, [checked]);
 
   const formattedStartDate = format(new Date(startDate), 'MMM, dd - hh:mm a');
   const formattedEndDate = format(new Date(endDate), 'MMM, dd - hh:mm a');
   const secondary = `${formattedStartDate} - ${formattedEndDate}`;
 
   const handleOnChange = () => {
+    onComplete(id);
     setChecked(!checked);
   };
 
   return (
-    <Container secondaryAction={<DeleteButton />}>
+    <Container
+      secondaryAction={<DeleteButton onClick={() => onDeleteTask(id)} />}
+    >
       <ListItemIcon>
-        <CheckBox checked={completed} onChange={handleOnChange} />
+        <CheckBox checked={checked} onChange={handleOnChange} />
       </ListItemIcon>
       <ListItemText primary={name} secondary={secondary} />
     </Container>

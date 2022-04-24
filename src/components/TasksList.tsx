@@ -5,17 +5,26 @@ import { styled } from '@mui/material/styles';
 import TaskItem from './TaskItem';
 
 import { Task } from '../interfaces/interfaces';
+import { useCollectionContext } from '../contexts/CollectionContext';
 
 const Container = styled(Box)(({ theme }) => ({
   margin: theme.spacing(5, 0, 0, 0),
 }));
 
-export interface TasksListProps {
-  id: string;
-  tasks: Task[];
-}
+function TasksList() {
+  const { collection, handleOnDeleteTask, handleOnCompleteTask } =
+    useCollectionContext();
 
-function TasksList({ tasks, id }: TasksListProps) {
+  const { tasks = [], id } = collection;
+
+  const handleOnDelete = (taskId: string) => {
+    handleOnDeleteTask(taskId);
+  };
+
+  const handleOnChange = (taskId: string) => {
+    handleOnCompleteTask(taskId);
+  };
+
   return (
     <Container>
       {tasks.length > 0 ? (
@@ -23,7 +32,12 @@ function TasksList({ tasks, id }: TasksListProps) {
           <Typography variant="body2">Tasks List</Typography>
           <List>
             {tasks.map((task: Task) => (
-              <TaskItem {...task} key={task.id} />
+              <TaskItem
+                {...task}
+                key={task.id}
+                onDeleteTask={handleOnDelete}
+                onComplete={handleOnChange}
+              />
             ))}
           </List>
         </>

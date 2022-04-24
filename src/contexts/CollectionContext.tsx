@@ -17,17 +17,16 @@ import {
 } from '../utils/db';
 
 export interface CollectionContext {
-  collection: Collection | null;
+  collection: Collection;
   isTaskFormOpen: boolean;
   collections: Collection[];
-  collectionId: string | null;
-  openTaskForm: () => void;
-  closeTaskForm: () => void;
-  setCollectionId: (collectionId: string) => void;
+  setIsTaskFormOpen: (isTaskFormOpen: boolean) => void;
   addCollection: (collection: string) => void;
   addTaskToCollection: (task: FormData) => Promise<void>;
   handleOnDeleteCollection: (collectionId: string) => Promise<void>;
-  handleOnDeleteTask: (collectionId: string, taskId: string) => Promise<void>;
+  handleOnDeleteTask: (taskId: string) => Promise<void>;
+  handleOnCompleteTask: (taskId: string) => Promise<void>;
+  setSelectedCollection: (collectionId: string) => void;
 }
 
 export interface CollectionContextProps {
@@ -41,8 +40,7 @@ const collectionContext = createContext<CollectionContext>(
 export function CollectionContextProvider({
   children,
 }: CollectionContextProps) {
-  const [collectionId, setCollectionId] = useState('');
-  const [collection, setCollection] = useState<Collection | null>(null);
+  const [collection, setCollection] = useState<Collection>({} as Collection);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [isTaskFormOpen, setIsTaskFormOpen] = useState(false);
 
@@ -51,7 +49,7 @@ export function CollectionContextProvider({
       try {
         const collections = await getCollections();
         setCollections(collections);
-        setCollectionId(collections[0].id!);
+        setCollection(collections[0]);
       } catch (error) {
         console.error(error);
       }
@@ -59,30 +57,6 @@ export function CollectionContextProvider({
 
     fetchCollections();
   }, []);
-
-  // ! TODO this can be optimized and only use the collection
-  useEffect(() => {
-    const selectedCollection = collections.find(
-      (collection) => collection.id === collectionId
-    );
-    if (selectedCollection) {
-      setCollection(selectedCollection);
-    }
-  }, [collectionId]);
-
-  // ! TODO this two functions can be used only in the components where are used
-  const openTaskFormHandler = () => {
-    setIsTaskFormOpen(true);
-  };
-
-  const closeTaskFormHandler = () => {
-    setIsTaskFormOpen(false);
-  };
-
-  // ! TODO this function can be used only in the components where is used
-  const setCollectionIdHandler = (id: string) => {
-    setCollectionId(id);
-  };
 
   const addCollectionToDb = async (collection: string) => {
     try {
@@ -95,8 +69,8 @@ export function CollectionContextProvider({
 
   const addTask = async (task: FormData) => {
     try {
-      const newTask = await addTaskToCollection(collectionId, task);
       if (collection) {
+        const newTask = await addTaskToCollection(collection.id, task);
         const updatedCollection: Collection = {
           ...collection,
           tasks: [newTask, ...collection.tasks],
@@ -127,11 +101,38 @@ export function CollectionContextProvider({
           ...collection,
           tasks: collection.tasks.filter((task) => task.id !== taskId),
         };
-        await updateCollectionTasks(collectionId, updatedCollection.tasks);
+        await updateCollectionTasks(collection.id, updatedCollection.tasks);
         setCollection(updatedCollection);
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleOnCompleteTask = async (taskId: string) => {
+    try {
+      if (collection) {
+        const updatedCollection = {
+          ...collection,
+          tasks: collection.tasks.map(({ completed, ...task }) => ({
+            ...task,
+            completed: task.id === taskId ? !completed : completed,
+          })),
+        };
+        await updateCollectionTasks(collection.id, updatedCollection.tasks);
+        setCollection(updatedCollection);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const setSelectedCollection = (id: string) => {
+    const selectedCollection = collections.find(
+      (collection) => collection.id === id
+    );
+    if (selectedCollection) {
+      setCollection(selectedCollection);
     }
   };
 
@@ -141,12 +142,11 @@ export function CollectionContextProvider({
         collection,
         isTaskFormOpen,
         collections,
-        collectionId,
         handleOnDeleteCollection,
         handleOnDeleteTask,
-        openTaskForm: openTaskFormHandler,
-        closeTaskForm: closeTaskFormHandler,
-        setCollectionId: setCollectionIdHandler,
+        setIsTaskFormOpen,
+        setSelectedCollection,
+        handleOnCompleteTask,
         addCollection: addCollectionToDb,
         addTaskToCollection: addTask,
       }}

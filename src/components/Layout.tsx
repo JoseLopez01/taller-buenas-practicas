@@ -8,7 +8,11 @@ import Main from './Main';
 import TaskForm from './TaskForm';
 
 function Layout() {
-  const { isTaskFormOpen, closeTaskForm } = useCollectionContext();
+  const { isTaskFormOpen, setIsTaskFormOpen } = useCollectionContext();
+
+  const closeTaskForm = () => {
+    setIsTaskFormOpen(false);
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>

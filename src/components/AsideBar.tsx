@@ -8,6 +8,7 @@ import { styled } from '@mui/material/styles';
 import MenuItem from './MenuItem';
 import AddCollection from './AddCollection';
 import { useCollectionContext } from '../contexts/CollectionContext';
+import { useEffect, useState } from 'react';
 
 const Container = styled(Drawer)(({ theme }) => ({
   width: theme.spacing(25),
@@ -28,14 +29,12 @@ const Content = styled(Box)(({ theme }) => ({
 function AsideBar() {
   const {
     collections,
-    setCollectionId,
-    collectionId,
+    collection,
     handleOnDeleteCollection,
+    setSelectedCollection,
   } = useCollectionContext();
 
-  const handleOnClick = (id: string) => {
-    setCollectionId(id);
-  };
+  const { id: collectionId } = collection;
 
   return (
     <Container
@@ -53,9 +52,9 @@ function AsideBar() {
           {collections.map(({ name, id }) => (
             <MenuItem
               key={id}
-              onClick={() => handleOnClick(id!)}
               isSelected={id === collectionId}
-              onDelete={() => handleOnDeleteCollection(id!)}
+              onDelete={() => handleOnDeleteCollection(id)}
+              onClick={() => setSelectedCollection(id)}
             >
               {name}
             </MenuItem>

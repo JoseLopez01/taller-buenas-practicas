@@ -14,28 +14,26 @@ const ButtonContainer = styled('div')(({ theme }) => ({
 }));
 
 function Collection() {
-  const { openTaskForm, collection } = useCollectionContext();
+  const { setIsTaskFormOpen, collection } = useCollectionContext();
 
-  let name: string = 'No collection selected';
-  let tasks: Task[] = [];
+  const { name } = collection;
 
-  if (collection) {
-    name = collection.name;
-    tasks = collection.tasks;
-  }
+  const openTaskForm = () => {
+    setIsTaskFormOpen(true);
+  };
 
   return (
     <>
       <Box>
         <Typography variant="h5">{name}</Typography>
-        {collection && (
+        {collection.tasks && (
           <>
             <ButtonContainer>
               <AddTaskButton onClick={openTaskForm} />
             </ButtonContainer>
-            <TasksList tasks={tasks} id={collection.id} />
           </>
         )}
+        <TasksList />
       </Box>
     </>
   );
